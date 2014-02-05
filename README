@@ -1,0 +1,12 @@
+Dependencies so far for gstorage-lib:
+1.	g++: sudo apt-get install g++
+2.	libxml++ wrapper:
+	Download link(v2.37.1): http://libxmlplusplus.sourceforge.net/
+	Dependencies:
+	libxml2: sudo apt-get install libxml2-dev
+	glibmm: sudo apt-get install libglibmm-2.4-dev
+3. 	curl c++ wrapper:
+	Download link: http://code.google.com/p/curlpp/downloads/list
+	Dependencies:
+	boost dev libraries: sudo apt-get install libboost-all-dev
+	libcurl: sudo apt-get install libcurl4-gnutls-dev
