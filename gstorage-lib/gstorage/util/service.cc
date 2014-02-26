@@ -6,14 +6,13 @@ namespace client {
 using std::ifstream;
 using std::ios;
 
-Service::Service(const string &service_name, const string &application_name)
+Service::Service(const string &service_name, const string &application_name, const string &gdata_version)
     : service_name_(service_name),
       application_name_(application_name) {
 
   // Standard headers for every request
-  request_headers_.push_back("User-Agent: " + application_name +
-                             " GData-C++/" + kVersion);
-  request_headers_.push_back("GData-Version: 2.0");
+  request_headers_.push_back("User-Agent: " + application_name);
+  request_headers_.push_back("GData-Version: " + gdata_version);
 }
 
 void Service::ClientLogin(string email,
@@ -74,20 +73,25 @@ string Service::HttpRequest(const string& http_method,
     curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1);
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &resp_buffer);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0L);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, false);
+    //curl_easy_setopt(curl, CURLOPT_SSLVERSION, 3);
     //curl_easy_setopt(curl, CURLOPT_VERBOSE , 1);
 
     struct curl_slist *headers = NULL;
 
+    cout << "URL called: " << url.c_str() << endl;
+    cout << "Request headers: " << endl;
     // Add standard headers
     for (unsigned int i = 0; i < request_headers_.size(); ++i) {
       headers = curl_slist_append(headers, request_headers_[i].c_str());
+      cout << "'" << request_headers_[i].c_str() << "'" << endl;
     }
 
     // Add any custom headers
     for (unsigned int i = 0; i < custom_headers.size(); ++i) {
       headers = curl_slist_append(headers, custom_headers[i].c_str());
+      cout << "'" << custom_headers[i].c_str() << "'" << endl;
     }
 
     if (http_method == "GET") {
@@ -145,6 +149,7 @@ string Service::HttpRequest(const string& http_method,
       delete[] memblock;
     }
 
+    cout << "Http Response Code: " << http_code;
     if (curl_code != CURLE_OK) {
       cout << "\nError: [" << curl_code << "] - " << errorBuffer;
       exit(1);

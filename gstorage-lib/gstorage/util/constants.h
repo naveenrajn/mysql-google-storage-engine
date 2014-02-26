@@ -16,6 +16,7 @@ const string LOGIN_PASSWORD = "PassworD";
 
 //Google constants
 const string SPREADSHEET_SERVICE_NAME = "wise";
+const string DOCLIST_SERVICE_NAME = "writely";
 
 //HTTP Request Types
 const string HTTP_REQUEST_TYPE_GET = "GET";

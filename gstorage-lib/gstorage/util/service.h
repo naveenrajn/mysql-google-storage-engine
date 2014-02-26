@@ -28,8 +28,8 @@
 #include <string>
 #include <vector>
 #include <curl/curl.h>
-#include "../util/string_utils.h"
-#include "../atom_helper.h"
+#include "string_utils.h"
+#include "atom_helper.h"
 
 namespace gdata {
 namespace client {
@@ -54,7 +54,7 @@ const string kClientLoginAuthHeaderPrefix =
 class Service {
  public:
   Service() {}
-  Service(const string& service_name, const string& application_name);
+  Service(const string& service_name, const string& application_name, const string& gdata_version);
   ~Service() {}
 
   const string& auth_token() const { return auth_token_; }

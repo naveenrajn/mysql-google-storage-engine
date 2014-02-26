@@ -39,33 +39,23 @@ class AtomHelper {
   AtomHelper();
   ~AtomHelper() {}
 
-  void Parse(const string& xml_str) { parser_.parse_memory(xml_str); }
-  void RegisterNamespaces(const map<string, string>& namespaces);
+  void parse(const string& xml_str) { parser_.parse_memory(xml_str); }
 
   NodeSet Find(const Node *node, string xpath) const {
     return node->find(xpath, namespaces_);
   }
 
-  const Element* Link(const xmlpp::Node *entry, string rel) const;
-  string Attribute(const Element *from_element, string attr_name) const;
+  const Node* getRootNode() const;
+  NodeSet getEntries() const;
 
-  const Node* Entry() const;
-  NodeSet Entries() const;
-  string AlternateLinkHref(const Node *entry) const;
-  string CategoryLabel(const Node *entry) const;
-  string AclRole(const Node *entry) const;
-  string AclScope(const Node *entry) const;
-  string ContentSrc(const Node *entry) const;
-  string EditLinkHref(const Node *entry) const;
-  string EditMediaLinkHref(const Node *entry) const;
-  string ETag(const Node *entry) const;
-  string FeedLinkHref(const Node *entry) const;
-  string Id(const Node *entry) const;
-  string Title(const Node *entry) const;
+  string getSingleElementData(const Node *parent, string xpath) const;
+  string getAttribute(const Element *from_element, string attr_name) const;
+  const Element* getLinkByRel(const Node *entry, string rel) const;
 
  private:
   xmlpp::DomParser parser_;
   Node::PrefixNsMap namespaces_;
+  void registerNamespaces(const map<string, string>& namespaces);
 };
 
 }  // namespace gdata

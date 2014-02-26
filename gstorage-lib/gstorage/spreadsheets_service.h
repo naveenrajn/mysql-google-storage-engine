@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-#include "constants.h"
-#include "gdata/client/service.h"
+#include "util/constants.h"
+#include "util/service.h"
 
 namespace sp14 {
 namespace adbms {
@@ -13,19 +13,20 @@ namespace gstorage {
 using std::string;
 using gdata::client::Service;
 
-class SpreadsheetMetadataService : public Service {
+class SpreadsheetsService : public Service {
 public:
-	SpreadsheetMetadataService();
-	~SpreadsheetMetadataService() {};
+	SpreadsheetsService();
+	~SpreadsheetsService() {};
 
-	string getWorksheetListFeedURL(string documentTitle);
-	string getWorksheetCellFeedURL(string documentTitle);
+	string getWorksheetCellsFeedURL(string worksheetsFeedURL);
+	string getWorksheetListFeedURL(string worksheetsFeedURL);
+	//string getWorksheetCellFeedURL(string documentTitle);
 
 	//see if static can be removed and made private
 	static const string spreadsheetListServiceURL; // = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
 	
 private:
-	string getPrimaryWorksheetFeedURL(string documentTitle);
+	//string getPrimaryWorksheetFeedURL(string documentTitle);
 };
 
 }}} //namespace sp14::adbms::gstorage
