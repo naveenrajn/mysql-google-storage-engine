@@ -11,7 +11,7 @@ namespace sp14 {
 namespace adbms {
 namespace gstorage {
 
-	const string SpreadsheetsService::spreadsheetListServiceURL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
+	const string SpreadsheetsService::spreadsheetsServiceURL = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
 
 	SpreadsheetsService::SpreadsheetsService() : Service(SPREADSHEET_SERVICE_NAME, APPLICATION_NAME, "3.0") {
 		ClientLogin(LOGIN_EMAIL, LOGIN_PASSWORD);
@@ -58,18 +58,22 @@ namespace gstorage {
 	}
 
 	//Retrieves and returns the URI of the worksheets feed for the spreadsheet with title "documentTitle"
-	/*string SpreadsheetsService::getPrimaryWorksheetFeedURL(string documentTitle) {
-		atom_helper_.Parse(HttpRequest(HTTP_REQUEST_TYPE_GET, spreadsheetListServiceURL));
-		NodeSet entries = atom_helper_.Entries();
+	string SpreadsheetsService::getPrimaryWorksheetFeedURL(string documentTitle) {
+		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, spreadsheetsServiceURL));
+		NodeSet entries = atom_helper_.getEntries();
 
 		for (unsigned int i = 0; i < entries.size(); ++i) {
-			if(atom_helper_.Title(entries[i]) == documentTitle) {
-				return atom_helper_.ContentSrc(entries[i]);
+			if(atom_helper_.getSingleElementData(entries[i], "./atom:title").compare(documentTitle)==0) {
+				NodeSet contents = atom_helper_.Find(entries[i], "./atom:content");
+				if(contents.size()) return atom_helper_.getAttribute(dynamic_cast<const xmlpp::Element*>(contents[0]), "src");
+				else {
+					//Do we need to handle this condition?
+				}
 			}
 		}
 		
 		//TODO: Throw exception or handle appropriately. Case: No matching document found for the given documen title
 		return NULL;
-	}*/
+	}
 
 }}}

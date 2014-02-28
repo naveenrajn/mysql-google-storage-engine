@@ -23,9 +23,8 @@ public:
 
 	//see if static can be removed and made private
 	static const string docListServiceURL; // = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
-
-	const string searchResultCount_xpath = "./openSearch:totalResults";
-	const string worksheetsFeedLinkRel = "http://schemas.google.com/spreadsheets/2006#worksheetsfeed";
+	static const string searchResultCount_xpath;
+	static const string worksheetsFeedLinkRel;
 
 private:
 	bool isSpreadsheetAlreadyAvailable(string sheetName);

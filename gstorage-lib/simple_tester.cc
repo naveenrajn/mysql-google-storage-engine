@@ -19,8 +19,13 @@ int main(int argc, char const *argv[]) {
 	//driveService.createSpreadsheet("simple_tester_upload_4");
 	//cout << endl << driveService.searchSpreadsheetByTitle("simple_tester_upload_4") << endl;
 
+	//SpreadsheetsService sheetsService;
+	//cout <<endl<< sheetsService.getWorksheetListFeedURL("https://spreadsheets.google.com/feeds/worksheets/0Ao_7Rhfs8LHbdGdsVFhFLWxlTVY1Q21Od25CeTdYVnc/private/full");
+
 	SpreadsheetsService sheetsService;
-	cout <<endl<< sheetsService.getWorksheetListFeedURL("https://spreadsheets.google.com/feeds/worksheets/0Ao_7Rhfs8LHbdGdsVFhFLWxlTVY1Q21Od25CeTdYVnc/private/full");
+	string worksheetsFeedURL = sheetsService.getPrimaryWorksheetFeedURL("./test/test_table_3");
+	cout << endl << worksheetsFeedURL;
+	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);
 
 	return 0;
 }

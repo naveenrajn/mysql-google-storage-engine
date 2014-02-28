@@ -20,10 +20,11 @@ public:
 
 	string getWorksheetCellsFeedURL(string worksheetsFeedURL);
 	string getWorksheetListFeedURL(string worksheetsFeedURL);
+	string getPrimaryWorksheetFeedURL(string documentTitle);
 	//string getWorksheetCellFeedURL(string documentTitle);
 
 	//see if static can be removed and made private
-	static const string spreadsheetListServiceURL; // = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
+	static const string spreadsheetsServiceURL; // = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
 	
 private:
 	//string getPrimaryWorksheetFeedURL(string documentTitle);

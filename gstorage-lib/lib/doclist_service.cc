@@ -10,6 +10,8 @@ namespace adbms {
 namespace gstorage {
 
 	const string DocListService::docListServiceURL = "https://docs.google.com/feeds/documents/private/full";
+	const string DocListService::searchResultCount_xpath = "./openSearch:totalResults";
+	const string DocListService::worksheetsFeedLinkRel = "http://schemas.google.com/spreadsheets/2006#worksheetsfeed";
 
 	DocListService::DocListService() : Service(DOCLIST_SERVICE_NAME, APPLICATION_NAME, "2.0") {
 		ClientLogin(LOGIN_EMAIL, LOGIN_PASSWORD);
