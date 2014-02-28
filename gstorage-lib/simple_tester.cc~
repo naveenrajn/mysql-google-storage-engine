@@ -4,8 +4,8 @@
 #include <libxml++/libxml++.h>
 #include <curl/curl.h>
 
-#include "lib/doclist_service.h"
-#include "lib/spreadsheets_service.h"
+#include "gstorage/doclist_service.h"
+#include "gstorage/spreadsheets_service.h"
 
 using sp14::adbms::gstorage::DocListService;
 using sp14::adbms::gstorage::SpreadsheetsService;
