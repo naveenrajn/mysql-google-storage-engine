@@ -13,23 +13,23 @@ clean:
 $(EXE): string_utils.o atom_helper.o service.o doclist_service.o spreadsheets_service.o simple_tester.o
 	$(CC) -Wall -O3 *.o $(LDFLAGS) -o $(EXE)
 
-spreadsheet_test.o: spreadsheet_test.cc gstorage/spreadsheets_service.h
+spreadsheet_test.o: spreadsheet_test.cc lib/spreadsheets_service.h
 	$(CC) $(CFLAGS) spreadsheet_test.cc $(INCLUDES)
 
-spreadsheets_service.o: gstorage/spreadsheets_service.cc gstorage/spreadsheets_service.h
-	$(CC) $(CFLAGS) gstorage/spreadsheets_service.cc $(INCLUDES)
+spreadsheets_service.o: lib/spreadsheets_service.cc lib/spreadsheets_service.h
+	$(CC) $(CFLAGS) lib/spreadsheets_service.cc $(INCLUDES)
 
-doclist_service.o: gstorage/doclist_service.cc gstorage/doclist_service.h
-	$(CC) $(CFLAGS) gstorage/doclist_service.cc $(INCLUDES)
+doclist_service.o: lib/doclist_service.cc lib/doclist_service.h
+	$(CC) $(CFLAGS) lib/doclist_service.cc $(INCLUDES)
 
-service.o: gstorage/util/service.cc gstorage/util/service.h
-	$(CC) $(CFLAGS) gstorage/util/service.cc $(INCLUDES)
+service.o: lib/util/service.cc lib/util/service.h
+	$(CC) $(CFLAGS) lib/util/service.cc $(INCLUDES)
 
-atom_helper.o: gstorage/util/atom_helper.cc gstorage/util/atom_helper.h
-	$(CC) $(CFLAGS) gstorage/util/atom_helper.cc $(INCLUDES)
+atom_helper.o: lib/util/atom_helper.cc lib/util/atom_helper.h
+	$(CC) $(CFLAGS) lib/util/atom_helper.cc $(INCLUDES)
 
-string_utils.o: gstorage/util/string_utils.cc gstorage/util/string_utils.h
-	$(CC) $(CFLAGS) gstorage/util/string_utils.cc
+string_utils.o: lib/util/string_utils.cc lib/util/string_utils.h
+	$(CC) $(CFLAGS) lib/util/string_utils.cc
 
 xmlpp_document_trials.o: xmlpp_document_trials.cc
 	$(CC) $(CFLAGS) xmlpp_document_trials.cc $(INCLUDES)
