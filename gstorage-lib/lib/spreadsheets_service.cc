@@ -1,11 +1,15 @@
 #include <iostream> //TODO: remove after testing
+#include <string> //TODO: remove after testing
+#include <stdlib.h> //TODO: remove after testing
+#include <stdio.h> //TODO: remove after testing
 #include <libxml++/libxml++.h>
 
 #include "spreadsheets_service.h"
 
 using xmlpp::NodeSet;
+using gdata::client::PostData;
 using std::cout; //TODO: remove after testing
-using std::endl; //TODO: remove after testing
+using std::endl;  //TODO: remove after testing
 
 namespace sp14 {
 namespace adbms {
@@ -74,6 +78,50 @@ namespace gstorage {
 		
 		//TODO: Throw exception or handle appropriately. Case: No matching document found for the given documen title
 		return NULL;
+	}
+
+	//Inserts headers for a given worksheet
+	string SpreadsheetsService::insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& values) {
+		cout << "-------------Calling cell feed----------";
+		string cellBaseUrl = getWorksheetCellsFeedURL(worksheetsFeedURL);
+		cout << "-------------Returned cell feed----------";
+		string postUrl = cellBaseUrl + "/batch";
+		xmlpp::Document document;
+		xmlpp::Element* nodeRoot = document.create_root_node("feed", "http://www.w3.org/2005/Atom", "");
+		nodeRoot->set_namespace_declaration("http://schemas.google.com/gdata/batch", "batch");
+		nodeRoot->set_namespace_declaration("http://schemas.google.com/spreadsheets/2006", "gs");
+		xmlpp::Element* id = nodeRoot->add_child("id");
+		id -> set_child_text(cellBaseUrl);
+		for (unsigned int i = 0; i < values.size(); ++i) {
+			std::stringstream ss;
+			ss << i+1;
+			std::string temp = ss.str();
+			xmlpp::Element* entry1 = nodeRoot->add_child("entry");
+			xmlpp::Element* batchId1 = entry1->add_child("batch:id");
+			batchId1 -> set_child_text("A"+ temp);
+			xmlpp::Element* batchOperation1 = entry1->add_child("batch:operation");
+			batchOperation1 ->set_attribute("type", "update");
+			xmlpp::Element* id1 = entry1->add_child("id");
+			id1 -> set_child_text(cellBaseUrl+"/R2C"+temp);
+			xmlpp::Element* link1 = entry1->add_child("link");
+			link1 ->set_attribute("rel", "edit");
+			link1 ->set_attribute("type", "application/atom+xml");
+			link1 ->set_attribute("href", cellBaseUrl+"/R2C" + temp + "/version");
+			xmlpp::Element* cell1 = entry1->add_child("gs:cell");
+			cell1 ->set_attribute("row", "2");
+			cell1 ->set_attribute("col", temp);
+			cell1 ->set_attribute("inputValue", values[i]);
+		}
+		string requestDataString = document.write_to_string();
+		PostData post_data;
+		post_data.data = const_cast<char*>(requestDataString.c_str());
+		std::vector<string> custom_headers;
+		custom_headers.push_back("Content-Length: " + strlen(post_data.data));
+		custom_headers.push_back("Content-Type: application/atom+xml");
+		custom_headers.push_back("X-Upload-Content-Length: 0");		
+		cout << "-------------Built request----------";
+		HttpRequest("PUT", postUrl, custom_headers, post_data);
+		return requestDataString;
 	}
 
 }}}

@@ -83,7 +83,13 @@ int main(int argc, char const *argv[])
 	//abc::printAllNodeEntryValues(&serviceHelper, "https://spreadsheets.google.com/feeds/worksheets/tL0gIAg-7hRon3qcgUCWsIg/private/full");
 
 	SpreadsheetMetadataService service;
-	cout << service.getWorksheetListFeedURL("spreadsheet_test");
+	string worksheetsFeedURL = service.getWorksheetListFeedURL("spreadsheet_test");
+	cout << worksheetsFeedURL;
+	std::vector<string> values;
+	values.push_back("A1");
+	values.push_back("A2");
+	cout << service.insertTableHeaders(worksheetsFeedURL, values);
+//	cout << service.getWorksheetCellsFeedURL(worksheetsFeedURL);
 
 	return 0;
 }

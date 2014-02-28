@@ -11,6 +11,7 @@ namespace adbms {
 namespace gstorage {
 
 using std::string;
+using xmlpp::NodeSet;
 using gdata::client::Service;
 
 class SpreadsheetsService : public Service {
@@ -21,6 +22,7 @@ public:
 	string getWorksheetCellsFeedURL(string worksheetsFeedURL);
 	string getWorksheetListFeedURL(string worksheetsFeedURL);
 	string getPrimaryWorksheetFeedURL(string documentTitle);
+	string insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& values);
 	//string getWorksheetCellFeedURL(string documentTitle);
 
 	//see if static can be removed and made private
