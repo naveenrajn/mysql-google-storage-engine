@@ -10,6 +10,7 @@ AtomHelper::AtomHelper() {
   map<string, string> namespaces;
   namespaces_["atom"] = "http://www.w3.org/2005/Atom";
   namespaces_["openSearch"] = "http://a9.com/-/spec/opensearch/1.1/";
+  namespaces_["gsx"] = "http://schemas.google.com/spreadsheets/2006/extended";
   registerNamespaces(namespaces);
 }
 

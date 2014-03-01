@@ -125,4 +125,21 @@ namespace gstorage {
 		return HttpRequest("POST", postUrl, custom_headers, post_data);
 	}
 
+	/*Retrieves all rows from the given spreadsheet list feed URL and adds it to the passed rowData object*/
+	//TODO: Handle exceptions(like trying reading an unavailable field, etc., etc.)
+	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, RowData *rowData) {
+		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, listFeedURL));
+
+		NodeSet entries = atom_helper_.getEntries();
+		rowData->numberOfRows = entries.size();
+
+		for (unsigned int i = 0; i < entries.size(); ++i) {
+			std::vector<std::string> currentRow;
+			for (std::vector<std::string>::iterator fieldName = rowData->fieldNames.begin(); fieldName != rowData->fieldNames.end(); ++fieldName) {
+				currentRow.push_back(atom_helper_.getSingleElementData(entries[i], "./gsx:" + *fieldName));
+			}
+			rowData->rows.push_back(currentRow);
+		}
+	}
 }}}
+
