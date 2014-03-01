@@ -141,5 +141,11 @@ namespace gstorage {
 			rowData->rows.push_back(currentRow);
 		}
 	}
+
+	//Inserts a row at the end of a given worksheet
+	string SpreadsheetsService::insertRow(string worksheetsFeedURL, RowData rowData) {
+		return "";
+	}
+
 }}}
 
