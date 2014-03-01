@@ -24,29 +24,35 @@ int main(int argc, char const *argv[]) {
 	//SpreadsheetsService sheetsService;
 	//cout <<endl<< sheetsService.getWorksheetListFeedURL("https://spreadsheets.google.com/feeds/worksheets/0Ao_7Rhfs8LHbdGdsVFhFLWxlTVY1Q21Od25CeTdYVnc/private/full");
 
-	/*SpreadsheetsService sheetsService;
+	SpreadsheetsService sheetsService;
 	string worksheetsFeedURL = sheetsService.getPrimaryWorksheetFeedURL("./test/test_table_3");
 	cout << endl << worksheetsFeedURL;
-//	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);
-	std::vector<string> values;
+	//cout << endl << sheetsService.getWorksheetListFeedURL(worksheetsFeedURL);
+	/*std::vector<string> values;
 	values.push_back("A1");
 	values.push_back("A2");
 	std::cout << endl << "-------------Calling insert header---------------" << endl;
 	std::cout << sheetsService.insertTableHeaders(worksheetsFeedURL, values);
-	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);*/
+	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);
 
-	SpreadsheetsService sheetsService;
+	SpreadsheetsService sheetsService;*/
 	RowData *rowData = new RowData();
+	rowData->fieldNames.clear();
+	rowData->rows.clear();
+	std::vector<string> row;
+	row.push_back("val1");
+	row.push_back("val2");
 	rowData->fieldNames.push_back("col1");
 	rowData->fieldNames.push_back("col2");
-	rowData->fieldNames.push_back("col3");
-	rowData->fieldNames.push_back("col4");
+	rowData->rows.push_back(row);
+	//rowData->fieldNames.push_back("col3");
+	//rowData->fieldNames.push_back("col4");
 
-	sheetsService.getWorksheetListFeed("https://spreadsheets.google.com/feeds/list/tCa_wbrrXoJSjpZmRnxKNng/od6/private/full",
-		rowData);
-	cout << endl << "No of rows: " << rowData->numberOfRows << endl;
+	//sheetsService.getWorksheetListFeed("https://spreadsheets.google.com/feeds/list/tCa_wbrrXoJSjpZmRnxKNng/od6/private/full",
+		//rowData);
+//	cout << endl << "No of rows: " << rowData->numberOfRows << endl;
 
-	for (std::vector<std::vector<string> >::iterator i = rowData->rows.begin(); i != rowData->rows.end(); ++i) {
+	/*for (std::vector<std::vector<string> >::iterator i = rowData->rows.begin(); i != rowData->rows.end(); ++i) {
 		std::vector<string> currentRow = *i;
 		for (std::vector<string>::iterator j = currentRow.begin(); j != currentRow.end(); ++j) {
 			cout << *j << " ";
@@ -54,7 +60,7 @@ int main(int argc, char const *argv[]) {
 		cout << endl;
 	}
 
-	delete rowData;
-
+	delete rowData;*/
+	sheetsService.insertRow(worksheetsFeedURL, rowData);
 	return 0;
 }
