@@ -84,11 +84,12 @@ int main(int argc, char const *argv[])
 
 	SpreadsheetMetadataService service;
 	string worksheetsFeedURL = service.getWorksheetListFeedURL("spreadsheet_test");
-	cout << worksheetsFeedURL;
+	std::cout << "Am here------" << worksheetsFeedURL;
 	std::vector<string> values;
 	values.push_back("A1");
 	values.push_back("A2");
-	cout << service.insertTableHeaders(worksheetsFeedURL, values);
+	std::cout << endl; << "-------------Calling insert header---------------" << endl;
+	std::cout << service.insertTableHeaders(worksheetsFeedURL, values);
 //	cout << service.getWorksheetCellsFeedURL(worksheetsFeedURL);
 
 	return 0;

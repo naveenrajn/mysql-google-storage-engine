@@ -25,7 +25,11 @@ int main(int argc, char const *argv[]) {
 	SpreadsheetsService sheetsService;
 	string worksheetsFeedURL = sheetsService.getPrimaryWorksheetFeedURL("./test/test_table_3");
 	cout << endl << worksheetsFeedURL;
-	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);
-
+//	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);
+	std::vector<string> values;
+	values.push_back("A1");
+	values.push_back("A2");
+	std::cout << endl << "-------------Calling insert header---------------" << endl;
+	std::cout << sheetsService.insertTableHeaders(worksheetsFeedURL, values);
 	return 0;
 }

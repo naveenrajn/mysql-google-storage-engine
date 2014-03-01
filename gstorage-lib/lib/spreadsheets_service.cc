@@ -102,13 +102,13 @@ namespace gstorage {
 			xmlpp::Element* batchOperation1 = entry1->add_child("batch:operation");
 			batchOperation1 ->set_attribute("type", "update");
 			xmlpp::Element* id1 = entry1->add_child("id");
-			id1 -> set_child_text(cellBaseUrl+"/R2C"+temp);
+			id1 -> set_child_text(cellBaseUrl+"/R1C"+temp);
 			xmlpp::Element* link1 = entry1->add_child("link");
 			link1 ->set_attribute("rel", "edit");
 			link1 ->set_attribute("type", "application/atom+xml");
-			link1 ->set_attribute("href", cellBaseUrl+"/R2C" + temp + "/version");
+			link1 ->set_attribute("href", cellBaseUrl+"/R1C" + temp + "/version");
 			xmlpp::Element* cell1 = entry1->add_child("gs:cell");
-			cell1 ->set_attribute("row", "2");
+			cell1 ->set_attribute("row", "1");
 			cell1 ->set_attribute("col", temp);
 			cell1 ->set_attribute("inputValue", values[i]);
 		}
@@ -116,12 +116,13 @@ namespace gstorage {
 		PostData post_data;
 		post_data.data = const_cast<char*>(requestDataString.c_str());
 		std::vector<string> custom_headers;
-		custom_headers.push_back("Content-Length: " + strlen(post_data.data));
+		custom_headers.clear();
 		custom_headers.push_back("Content-Type: application/atom+xml");
-		custom_headers.push_back("X-Upload-Content-Length: 0");		
+		custom_headers.push_back("X-Upload-Content-Length: 0");
+		custom_headers.push_back("If-Match: *");		
 		cout << "-------------Built request----------";
-		HttpRequest("PUT", postUrl, custom_headers, post_data);
-		return requestDataString;
+		cout << post_data.data;
+		return HttpRequest("POST", postUrl, custom_headers, post_data);
 	}
 
 }}}
