@@ -484,6 +484,29 @@ int ha_gstorage::write_row(uchar *buf)
     probably need to do something with 'buf'. We report a success
     here, to pretend that the insert was successful.
   */
+  share->tableData->rows.clear();
+  my_bitmap_map *old_map = dbug_tmp_use_all_columns(table, table->read_set);
+  my_ptrdiff_t offset = (my_ptrdiff_t)(buf-table->record[0]);
+  std::vector<std::string> currentRow;
+  for (uint i = 0; i < table->s->fields; i++) {
+    Field *field = table->field[i];
+    field->move_field_offset(offset);
+    if (field->is_null()) currentRow.push_back("");
+    else {
+      char tmp_buf[1024];
+      String tmp(tmp_buf, sizeof(tmp_buf), &my_charset_bin);
+      String *val = field->val_str(&tmp, &tmp);
+      currentRow.push_back(val->c_ptr());
+    }
+    field->move_field_offset(-offset);
+  }
+  share->tableData->rows.push_back(currentRow);
+  dbug_tmp_restore_column_map(table->read_set, old_map);
+  
+  spreadsheetsService->insertRow(share->tableData->worksheetListFeedURL, share->tableData);
+
+  share->tableData->rows.clear();
+
   DBUG_RETURN(0);
 }
 

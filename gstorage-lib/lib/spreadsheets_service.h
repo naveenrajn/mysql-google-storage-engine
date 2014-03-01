@@ -25,7 +25,7 @@ public:
 	string getWorksheetListFeedURL(string worksheetsFeedURL);
 	string getPrimaryWorksheetFeedURL(string documentTitle);
 	void insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& values);
-	string insertRow(string worksheetsFeedURL, TableData *tableData);
+	string insertRow(string listFeedUrl, TableData *tableData);
 	//string getWorksheetCellFeedURL(string documentTitle);
 	void getWorksheetListFeed(string listFeedURL, TableData *tableData);
 

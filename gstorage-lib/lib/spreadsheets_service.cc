@@ -139,8 +139,7 @@ namespace gstorage {
 	}
 
 	//Inserts a row at the end of a given worksheet
-	string SpreadsheetsService::insertRow(string worksheetsFeedURL, TableData *tableData) {
-		string listFeedUrl = getWorksheetListFeedURL(worksheetsFeedURL);		
+	string SpreadsheetsService::insertRow(string listFeedUrl, TableData *tableData) {
 		cout << listFeedUrl;
 		xmlpp::Document document;
 		xmlpp::Element* nodeRoot = document.create_root_node("entry", "http://www.w3.org/2005/Atom", "");
