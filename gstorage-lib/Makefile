@@ -16,7 +16,7 @@ $(EXE): string_utils.o atom_helper.o service.o doclist_service.o spreadsheets_se
 spreadsheet_test.o: spreadsheet_test.cc lib/spreadsheets_service.h
 	$(CC) $(CFLAGS) spreadsheet_test.cc $(INCLUDES)
 
-spreadsheets_service.o: lib/spreadsheets_service.cc lib/spreadsheets_service.h lib/model/row_data.h
+spreadsheets_service.o: lib/spreadsheets_service.cc lib/spreadsheets_service.h lib/model/table_data.h
 	$(CC) $(CFLAGS) lib/spreadsheets_service.cc $(INCLUDES)
 
 doclist_service.o: lib/doclist_service.cc lib/doclist_service.h

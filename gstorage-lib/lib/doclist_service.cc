@@ -2,6 +2,7 @@
 
 using xmlpp::NodeSet;
 using gdata::client::PostData;
+using sp14::adbms::gstorage::SpreadsheetsService;
 using std::cout; //TODO: remove after testing
 using std::endl; //TODO: remove after testing
 
@@ -17,9 +18,14 @@ namespace gstorage {
 		ClientLogin(LOGIN_EMAIL, LOGIN_PASSWORD);
 	}
 
+	DocListService::DocListService(SpreadsheetsService* sheetsService) : Service(DOCLIST_SERVICE_NAME, APPLICATION_NAME, "2.0") {
+		ClientLogin(LOGIN_EMAIL, LOGIN_PASSWORD);
+		spreadsheetsService = sheetsService;
+	}
+
 	/*Creates a new spreadsheet with the name sheetTitle, if not already available
 	  Returns the worksheets feed URL*/
-	void DocListService::createSpreadsheet(string sheetTitle) {
+	void DocListService::createSpreadsheet(string sheetTitle, const std::vector<string>& fieldNames) {
 		if(!isSpreadsheetAlreadyAvailable(sheetTitle)) {
 			xmlpp::Document document;
 			xmlpp::Element* nodeRoot = document.create_root_node("entry", "http://www.w3.org/2005/Atom", "");
@@ -43,7 +49,8 @@ namespace gstorage {
 
 			atom_helper_.parse(HttpRequest("POST", "https://docs.google.com/feeds/documents/private/full", custom_headers, post_data));
 			const xmlpp::Element *element = atom_helper_.getLinkByRel(atom_helper_.getRootNode(), worksheetsFeedLinkRel);
-			cout << atom_helper_.getAttribute(element, "href");
+			string worksheetsFeedURL = atom_helper_.getAttribute(element, "href");
+			spreadsheetsService->insertTableHeaders(worksheetsFeedURL, fieldNames);
 		} else {
 			cout << "Spreadsheet already available"; //TODO: handle this
 		}

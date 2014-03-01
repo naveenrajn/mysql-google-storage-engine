@@ -81,7 +81,7 @@ namespace gstorage {
 	}
 
 	//Inserts headers for a given worksheet
-	string SpreadsheetsService::insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& values) {
+	void SpreadsheetsService::insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& fieldNames) {
 		string cellBaseUrl = getWorksheetCellsFeedURL(worksheetsFeedURL);
 		string postUrl = cellBaseUrl + "/batch";
 		xmlpp::Document document;
@@ -90,7 +90,7 @@ namespace gstorage {
 		nodeRoot->set_namespace_declaration("http://schemas.google.com/spreadsheets/2006", "gs");
 		xmlpp::Element* id = nodeRoot->add_child("id");
 		id -> set_child_text(cellBaseUrl);
-		for (unsigned int i = 0; i < values.size(); ++i) {
+		for (unsigned int i = 0; i < fieldNames.size(); ++i) {
 			std::stringstream ss;
 			ss << i+1;
 			std::string temp = ss.str();
@@ -108,7 +108,7 @@ namespace gstorage {
 			xmlpp::Element* cell1 = entry1->add_child("gs:cell");
 			cell1 ->set_attribute("row", "1");
 			cell1 ->set_attribute("col", temp);
-			cell1 ->set_attribute("inputValue", values[i]);
+			cell1 ->set_attribute("inputValue", fieldNames[i]);
 		}
 		string requestDataString = document.write_to_string();
 		PostData post_data;
@@ -120,36 +120,34 @@ namespace gstorage {
 		custom_headers.push_back("If-Match: *");		
 		cout << "-------------Built request----------";
 		cout << post_data.data;
-		return HttpRequest("POST", postUrl, custom_headers, post_data);
+		HttpRequest("POST", postUrl, custom_headers, post_data);
 	}
 
-	/*Retrieves all rows from the given spreadsheet list feed URL and adds it to the passed rowData object*/
+	/*Retrieves all rows from the given spreadsheet list feed URL and adds it to the passed tableData object*/
 	//TODO: Handle exceptions(like trying reading an unavailable field, etc., etc.)
-	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, RowData *rowData) {
+	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, TableData *tableData) {
 		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, listFeedURL));
 
 		NodeSet entries = atom_helper_.getEntries();
-		rowData->numberOfRows = entries.size();
-
 		for (unsigned int i = 0; i < entries.size(); ++i) {
 			std::vector<std::string> currentRow;
-			for (std::vector<std::string>::iterator fieldName = rowData->fieldNames.begin(); fieldName != rowData->fieldNames.end(); ++fieldName) {
+			for (std::vector<std::string>::iterator fieldName = tableData->fieldNames.begin(); fieldName != tableData->fieldNames.end(); ++fieldName) {
 				currentRow.push_back(atom_helper_.getSingleElementData(entries[i], "./gsx:" + *fieldName));
 			}
-			rowData->rows.push_back(currentRow);
+			tableData->rows.push_back(currentRow);
 		}
 	}
 
 	//Inserts a row at the end of a given worksheet
-	string SpreadsheetsService::insertRow(string worksheetsFeedURL, RowData *rowData) {
+	string SpreadsheetsService::insertRow(string worksheetsFeedURL, TableData *tableData) {
 		string listFeedUrl = getWorksheetListFeedURL(worksheetsFeedURL);		
 		cout << listFeedUrl;
 		xmlpp::Document document;
 		xmlpp::Element* nodeRoot = document.create_root_node("entry", "http://www.w3.org/2005/Atom", "");
 		nodeRoot->set_namespace_declaration("http://schemas.google.com/spreadsheets/2006/extended", "gsx");
-		std::vector<std::string> row = rowData-> rows.at(0);
+		std::vector<std::string> row = tableData-> rows.at(0);
 		int i = 0;
-		for (std::vector<std::string>::iterator colName = rowData->fieldNames.begin(); colName != rowData->fieldNames.end(); ++colName) {
+		for (std::vector<std::string>::iterator colName = tableData->fieldNames.begin(); colName != tableData->fieldNames.end(); ++colName) {
 			xmlpp::Element* id = nodeRoot->add_child("gsx:" + *colName);
 			id -> set_child_text(row[i]);
 			i++;

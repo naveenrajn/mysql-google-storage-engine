@@ -6,11 +6,11 @@
 
 #include "lib/doclist_service.h"
 #include "lib/spreadsheets_service.h"
-#include "lib/model/row_data.h"
+#include "lib/model/table_data.h"
 
 using sp14::adbms::gstorage::DocListService;
 using sp14::adbms::gstorage::SpreadsheetsService;
-using sp14::adbms::gstorage::model::RowData;
+using sp14::adbms::gstorage::model::TableData;
 using std::string;
 using std::cout;
 using std::endl;
@@ -36,23 +36,23 @@ int main(int argc, char const *argv[]) {
 	cout << endl << sheetsService.getWorksheetCellsFeedURL(worksheetsFeedURL);
 
 	SpreadsheetsService sheetsService;*/
-	RowData *rowData = new RowData();
-	rowData->fieldNames.clear();
-	rowData->rows.clear();
+	TableData *tableData = new TableData();
+	tableData->fieldNames.clear();
+	tableData->rows.clear();
 	std::vector<string> row;
 	row.push_back("val1");
 	row.push_back("val2");
-	rowData->fieldNames.push_back("col1");
-	rowData->fieldNames.push_back("col2");
-	rowData->rows.push_back(row);
-	//rowData->fieldNames.push_back("col3");
-	//rowData->fieldNames.push_back("col4");
+	tableData->fieldNames.push_back("col1");
+	tableData->fieldNames.push_back("col2");
+	tableData->rows.push_back(row);
+	//tableData->fieldNames.push_back("col3");
+	//tableData->fieldNames.push_back("col4");
 
 	//sheetsService.getWorksheetListFeed("https://spreadsheets.google.com/feeds/list/tCa_wbrrXoJSjpZmRnxKNng/od6/private/full",
-		//rowData);
-//	cout << endl << "No of rows: " << rowData->numberOfRows << endl;
+		//tableData);
+//	cout << endl << "No of rows: " << tableData->numberOfRows << endl;
 
-	/*for (std::vector<std::vector<string> >::iterator i = rowData->rows.begin(); i != rowData->rows.end(); ++i) {
+	/*for (std::vector<std::vector<string> >::iterator i = tableData->rows.begin(); i != tableData->rows.end(); ++i) {
 		std::vector<string> currentRow = *i;
 		for (std::vector<string>::iterator j = currentRow.begin(); j != currentRow.end(); ++j) {
 			cout << *j << " ";
@@ -60,7 +60,7 @@ int main(int argc, char const *argv[]) {
 		cout << endl;
 	}
 
-	delete rowData;*/
-	sheetsService.insertRow(worksheetsFeedURL, rowData);
+	delete tableData;*/
+	sheetsService.insertRow(worksheetsFeedURL, tableData);
 	return 0;
 }

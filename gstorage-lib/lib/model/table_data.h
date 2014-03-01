@@ -9,14 +9,15 @@ namespace adbms {
 namespace gstorage {
 namespace model {
 
-typedef struct RowData {
-	int numberOfRows; //Do we need this? can we use rows.size() to get the number of rows?
+typedef struct TableData {
+	std::string worksheetListFeedURL;
+
 	std::vector<std::string> fieldNames;
 	std::vector<std::vector<std::string> > rows;
 
-	RowData() {};
-	~RowData() {};
-} RowData;
+	TableData() {};
+	~TableData() {};
+} TableData;
 
 }}}} //namespace sp14::adbms::gstorage::model
 
