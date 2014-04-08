@@ -5,6 +5,7 @@
 #include <curl/curl.h>
 
 #include "gstorage/spreadsheet_metadata_service.h"
+#include "lib/util/string_utils.h"
 
 using sp14::adbms::gstorage::SpreadsheetMetadataService;
 using std::string;
@@ -12,6 +13,7 @@ using std::map;
 using xmlpp::NodeSet;
 using std::cout;
 using std::endl;
+using gdata::util::StringUtils;
 
 /*namespace abc {
 

@@ -7,10 +7,12 @@
 #include "lib/doclist_service.h"
 #include "lib/spreadsheets_service.h"
 #include "lib/model/table_data.h"
+#include "lib/util/string_utils.h"
 
 using sp14::adbms::gstorage::DocListService;
 using sp14::adbms::gstorage::SpreadsheetsService;
 using sp14::adbms::gstorage::model::TableData;
+using gdata::util::StringUtils;
 using std::string;
 using std::cout;
 using std::endl;
@@ -25,8 +27,10 @@ int main(int argc, char const *argv[]) {
 	//cout <<endl<< sheetsService.getWorksheetListFeedURL("https://spreadsheets.google.com/feeds/worksheets/0Ao_7Rhfs8LHbdGdsVFhFLWxlTVY1Q21Od25CeTdYVnc/private/full");
 
 	SpreadsheetsService sheetsService;
-	string worksheetsFeedURL = sheetsService.getPrimaryWorksheetFeedURL("./test/test_table_3");
-	cout << endl << worksheetsFeedURL;
+	string worksheetsFeedURL = sheetsService.getPrimaryWorksheetFeedURL("./test/test3");
+	cout << endl << worksheetsFeedURL <<endl;
+	string worksheetListFeedURL = sheetsService.getWorksheetListFeedURL(worksheetsFeedURL);
+	cout << "List feed URL: " << endl << worksheetListFeedURL << endl;
 	//cout << endl << sheetsService.getWorksheetListFeedURL(worksheetsFeedURL);
 	/*std::vector<string> values;
 	values.push_back("A1");
@@ -40,8 +44,8 @@ int main(int argc, char const *argv[]) {
 	tableData->fieldNames.clear();
 	tableData->rows.clear();
 	std::vector<string> row;
-	row.push_back("val1");
-	row.push_back("val2");
+	row.push_back("2");
+	row.push_back("Row2");
 	tableData->fieldNames.push_back("col1");
 	tableData->fieldNames.push_back("col2");
 	tableData->rows.push_back(row);
@@ -61,6 +65,14 @@ int main(int argc, char const *argv[]) {
 	}
 
 	delete tableData;*/
-	sheetsService.insertRow(worksheetsFeedURL, tableData);
+	//sheetsService.insertRow(worksheetsFeedURL, tableData);
+	/*sheetsService.fetchFilteredSingleRow(worksheetListFeedURL, tableData);
+	if(tableData->rowEditURLs.size()>0)
+		sheetsService.deleteRow(tableData->rowEditURLs.at(0));*/
+	sheetsService.fetchFilteredSingleRow(worksheetListFeedURL, tableData);
+	tableData->rows.at(0)[0] = "1";
+	tableData->rows.at(0)[1] = "Row1";
+	sheetsService.updateRow(tableData);
+	//cout << endl << tableData->rowEditURLs.at(0) << endl;
 	return 0;
 }

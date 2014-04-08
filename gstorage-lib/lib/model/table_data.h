@@ -13,6 +13,8 @@ typedef struct TableData {
 	std::string worksheetListFeedURL;
 
 	std::vector<std::string> fieldNames;
+	std::vector<std::string> rowIDs;
+	std::vector<std::string> rowEditURLs;
 	std::vector<std::vector<std::string> > rows;
 
 	TableData() {};

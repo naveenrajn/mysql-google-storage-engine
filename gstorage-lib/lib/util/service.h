@@ -28,7 +28,6 @@
 #include <string>
 #include <vector>
 #include <curl/curl.h>
-#include "string_utils.h"
 #include "atom_helper.h"
 
 namespace gdata {

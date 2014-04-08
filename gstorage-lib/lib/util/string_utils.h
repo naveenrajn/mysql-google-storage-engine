@@ -15,7 +15,7 @@ using std::string;
 
 class StringUtils {
  public:
-  StringUtils();
+  StringUtils() {};
   ~StringUtils() {}
 
  static string to_lowercase(const string& str);

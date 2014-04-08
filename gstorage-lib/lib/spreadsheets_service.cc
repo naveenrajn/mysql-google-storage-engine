@@ -125,12 +125,16 @@ namespace gstorage {
 
 	/*Retrieves all rows from the given spreadsheet list feed URL and adds it to the passed tableData object*/
 	//TODO: Handle exceptions(like trying reading an unavailable field, etc., etc.)
-	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, TableData *tableData) {
+	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, TableData *tableData, bool isRowMetadataRequested) {
 		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, listFeedURL));
 
 		NodeSet entries = atom_helper_.getEntries();
 		for (unsigned int i = 0; i < entries.size(); ++i) {
 			std::vector<std::string> currentRow;
+			if(isRowMetadataRequested) {
+				tableData->rowIDs.push_back(atom_helper_.getSingleElementData(entries[i], "./atom:id"));
+				tableData->rowEditURLs.push_back(atom_helper_.getAttribute(atom_helper_.getLinkByRel(entries[i], "edit"), "href"));
+			}
 			for (std::vector<std::string>::iterator fieldName = tableData->fieldNames.begin(); fieldName != tableData->fieldNames.end(); ++fieldName) {
 				currentRow.push_back(atom_helper_.getSingleElementData(entries[i], "./gsx:" + *fieldName));
 			}
@@ -161,6 +165,77 @@ namespace gstorage {
 		cout << "-------------Built request----------";
 		cout << post_data.data;
 		return HttpRequest("POST", listFeedUrl, custom_headers, post_data);
+	}
+
+	/*Retrieves rows with the data matching the provided tableData construct*/
+	void SpreadsheetsService::fetchFilteredSingleRow(string listFeedUrl, TableData *tableData) {
+		if(tableData->rows.size()<=0) {
+			tableData->rows.clear();
+		}
+		StringUtils stringUtils;
+
+		std::vector<std::string> row = tableData-> rows.at(0);
+		listFeedUrl += "?sq=";
+		int i = 0;
+		bool isFirst = true;
+		for (std::vector<std::string>::iterator colName = tableData->fieldNames.begin(); colName != tableData->fieldNames.end(); ++colName) {
+			if(strlen(row[i].c_str())>0) {
+				if(!isFirst) listFeedUrl+="%20and%20";
+				else isFirst = false;
+				listFeedUrl+=*colName;
+				listFeedUrl+="=";
+				listFeedUrl+=stringUtils.find_and_replace(row[i], " ", "%20");
+			}
+			i++;
+		}
+		tableData->rows.clear();
+		getWorksheetListFeed(listFeedUrl, tableData, true);
+	}
+
+	bool SpreadsheetsService::deleteRow(string rowURL) {
+		cout << rowURL;
+		std::vector<string> custom_headers;
+		custom_headers.clear();
+		custom_headers.push_back("If-Match: *");
+		HttpRequest("DELETE", rowURL, custom_headers);//TODO handle failure response from API
+		return true;
+	}
+
+	bool SpreadsheetsService::updateRow(TableData *tableData) {
+		cout << "Inside updateRow" <<endl;
+		if(tableData->rows.size()>0 && tableData->rowIDs.size()>0 && tableData->rowEditURLs.size()>0) {
+			cout << "Inside updateRow if" <<endl;
+			xmlpp::Document document;
+			xmlpp::Element* nodeRoot = document.create_root_node("entry", "http://www.w3.org/2005/Atom", "");
+			nodeRoot->set_namespace_declaration("http://schemas.google.com/spreadsheets/2006/extended", "gsx");
+			xmlpp::Element* id = nodeRoot->add_child("id");
+			id -> set_child_text(tableData->rowIDs.at(0));
+			std::vector<std::string> row = tableData-> rows.at(0);
+			int i = 0;
+			for (std::vector<std::string>::iterator colName = tableData->fieldNames.begin(); colName != tableData->fieldNames.end(); ++colName) {
+				xmlpp::Element* id = nodeRoot->add_child("gsx:" + *colName);
+				id -> set_child_text(row[i]);
+				i++;
+			}
+			cout << "Inside updateRow: after document preparation" <<endl;
+			string requestDataString = document.write_to_string();
+			PostData post_data;
+			post_data.data = const_cast<char*>(requestDataString.c_str());
+			cout << "Inside updateRow:after post data preparation" <<endl;
+			std::vector<string> custom_headers;
+			custom_headers.clear();
+			custom_headers.push_back("Content-Type: application/atom+xml");
+			custom_headers.push_back("X-Upload-Content-Length: 0");
+			custom_headers.push_back("If-Match: *");
+			cout << "Inside updateRow:after headers" <<endl;
+			cout << "Post Data: " << post_data.data;
+			cout << "Inside updateRow: before calling" <<endl;
+			HttpRequest("PUT", tableData->rowEditURLs.at(0), custom_headers, post_data); //TODO handle faiure response from API
+			cout << "Inside updateRow: after calling" << endl;
+			return true;
+		} else {
+			return true; //Do we need to handle this?
+		}
 	}
 
 }}}

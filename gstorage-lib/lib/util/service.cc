@@ -124,8 +124,13 @@ string Service::HttpRequest(const string& http_method,
         }
       }
     } else if (http_method == "PUT") {
-      curl_easy_setopt(curl, CURLOPT_PUT, 1L);
-
+      //curl_easy_setopt(curl, CURLOPT_PUT, 1L);
+      //added
+      curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "PUT");
+      if (post_data.data != NULL) {
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, post_data.data);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDSIZE, strlen(post_data.data));
+      }
     } else if (http_method == "DELETE") {
       curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "DELETE");
 
