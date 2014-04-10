@@ -24,7 +24,7 @@ void AtomHelper::registerNamespaces(const map<string, string>& namespaces) {
 ///////////////////////////[START] Generic access methods//////////////////////////////////
 
 /*Returns the root node of the last parsed document*/
-const Node* AtomHelper::getRootNode() const {
+const Node* AtomHelper::getRootNode() const throw() {
   const Node *node = NULL;
 
   if (parser_) {
@@ -34,7 +34,7 @@ const Node* AtomHelper::getRootNode() const {
 }
 
 /*Returns content of the first element with xpath found under the specified parent*/
-string AtomHelper::getSingleElementData(const Node *parent, string xpath) const {
+string AtomHelper::getSingleElementData(const Node *parent, string xpath) const throw() {
   if (!parser_) return ""; //TODO: handle this
   NodeSet children = Find(parent, xpath);
   if (children.size()) {
@@ -46,7 +46,7 @@ string AtomHelper::getSingleElementData(const Node *parent, string xpath) const 
 }
 
 /*Returns the value of attribute with name attr_name in the element from_element*/
-string AtomHelper::getAttribute(const Element *from_element, string attr_name) const {
+string AtomHelper::getAttribute(const Element *from_element, string attr_name) const throw() {
   if (!parser_) return ""; //TODO: handle this
 
   const Element::AttributeList& attributes = from_element->get_attributes();
@@ -66,7 +66,7 @@ string AtomHelper::getAttribute(const Element *from_element, string attr_name) c
 ///////////////////////////[START] Specific access methods//////////////////////////////////
 
 /*Returns the list of nodes with xpath ./atom:entry under the document root*/
-NodeSet AtomHelper::getEntries() const {
+NodeSet AtomHelper::getEntries() const throw() {
   NodeSet entries;
   if (parser_) {
     entries = Find(parser_.get_document()->get_root_node(), "./atom:entry");
@@ -74,7 +74,7 @@ NodeSet AtomHelper::getEntries() const {
   return entries; //TODO: handle this
 }
 
-const Element* AtomHelper::getLinkByRel(const Node *entry, string rel) const {
+const Element* AtomHelper::getLinkByRel(const Node *entry, string rel) const throw() {
   if (!parser_) return NULL;
 
   NodeSet links = Find(entry, "./atom:link");

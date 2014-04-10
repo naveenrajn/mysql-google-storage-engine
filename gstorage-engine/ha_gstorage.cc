@@ -408,8 +408,6 @@ int ha_gstorage::open(const char *name, int mode, uint test_if_locked)
     std::cout << std::endl << "worksheetListFeedURL object null. getting new one" << std::endl;
     string worksheetsFeedURL = spreadsheetsService->getPrimaryWorksheetFeedURL(name);
     share->tableData->worksheetListFeedURL = const_cast<char*>(spreadsheetsService->getWorksheetListFeedURL(worksheetsFeedURL).c_str());
-  } else {
-    std::cout << std::endl << "worksheetListFeedURL object not null" << std::endl;
   }
 
   for(uint i=0; i<table->s->fields; i++) {
@@ -554,7 +552,6 @@ int ha_gstorage::update_row(const uchar *old_data, uchar *new_data)
       char tmp_buf[1024];
       String tmp(tmp_buf, sizeof(tmp_buf), &my_charset_bin);
       String *val = field->val_str(&tmp, &tmp);
-      std::cout << std::endl << "Pushing old value: " << val << std::endl;
       currentRow.push_back(val->c_ptr());
     }
     field->move_field_offset(-offset);
@@ -573,24 +570,16 @@ int ha_gstorage::update_row(const uchar *old_data, uchar *new_data)
       char tmp_buf[1024];
       String tmp(tmp_buf, sizeof(tmp_buf), &my_charset_bin);
       String *val = field->val_str(&tmp, &tmp);
-      std::cout << std::endl << "Pushing new value: " << val << std::endl;
       currentRow.push_back(val->c_ptr());
     }
     field->move_field_offset(-offset);
   }
   dbug_tmp_restore_column_map(table->read_set, old_map);
 
-  std::cout << std::endl << "FieldNames Size: " << updateData->fieldNames.size() << std::endl;
-  std::cout << std::endl << "Size: " << updateData->rows.size() << std::endl;
-
   spreadsheetsService->fetchFilteredSingleRow(share->tableData->worksheetListFeedURL, updateData);
   if(updateData->rowEditURLs.size()>0) {
     updateData->rows.clear();
     updateData->rows.push_back(currentRow);
-    std::cout << std::endl << "New FieldNames size: " << updateData->fieldNames.size() << std::endl;
-    std::cout << std::endl << "New size: " << updateData->rows.size() << std::endl;
-    std::cout << std::endl << "New RowEditURL size: " << updateData->rowEditURLs.size() << std::endl;
-    std::cout << std::endl << "New RowID size: " << updateData->rowEditURLs.size() << std::endl;
     spreadsheetsService->updateRow(updateData);
   }
 
@@ -641,7 +630,6 @@ int ha_gstorage::delete_row(const uchar *buf)
       char tmp_buf[1024];
       String tmp(tmp_buf, sizeof(tmp_buf), &my_charset_bin);
       String *val = field->val_str(&tmp, &tmp);
-      std::cout << std::endl << "Pushing value: " << val << std::endl;
       currentRow.push_back(val->c_ptr());
     }
     field->move_field_offset(-offset);
@@ -809,16 +797,14 @@ int ha_gstorage::rnd_next(uchar *buf)
     share->tableData->rows.clear();
     DBUG_RETURN(HA_ERR_END_OF_FILE);
   }
-  std::cout << std::endl << "No of rows: " << share->tableData->rows.size() << std::endl;
-  //std::cout << std::endl << "Query: " << table->in_use->query << std::endl; 
 
   my_bitmap_map *old_map = dbug_tmp_use_all_columns(table, table->write_set);
   my_ptrdiff_t offset = (my_ptrdiff_t)(buf-table->record[0]);
 
   for (uint i = 0; i < table->s->fields; i++) {
     Field *field = table->field[i];
-    std::cout << std::endl << field->field_name << " read Set: " << bitmap_is_set(table->read_set, i) << std::endl;
     field->move_field_offset(offset);
+    std::cout << std::endl << "Size of rows object: " << sizeof(share->tableData->rows) << std::endl;
     const char* value = share->tableData->rows.at(share->currentRowPosition).at(i).c_str();
     if(strlen(value) == 0) {
       field->set_null();

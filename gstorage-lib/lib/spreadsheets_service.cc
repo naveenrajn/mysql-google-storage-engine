@@ -22,7 +22,7 @@ namespace gstorage {
 	}
 
 	//Retrieves and returns the cells feed URI for worksheet "Sheet 1" in the spreadsheet with title "documentTitle"
-	string SpreadsheetsService::getWorksheetCellsFeedURL(string worksheetsFeedURL) {
+	string SpreadsheetsService::getWorksheetCellsFeedURL(string worksheetsFeedURL) throw() {
 		//string worksheetsFeedURL = getPrimaryWorksheetFeedURL(documentTitle); //TODO: handle if exception is thrown
 		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, worksheetsFeedURL));
 		NodeSet entries = atom_helper_.getEntries();
@@ -40,7 +40,7 @@ namespace gstorage {
 	}
 
 	//Retrieves and returns the list feed URI for worksheet "Sheet 1" in the spreadsheet with title "documentTitle"
-	string SpreadsheetsService::getWorksheetListFeedURL(string worksheetsFeedURL) {
+	string SpreadsheetsService::getWorksheetListFeedURL(string worksheetsFeedURL) throw() {
 		//string worksheetsFeedURL = getPrimaryWorksheetFeedURL(documentTitle); //TODO: handle if exception is thrown
 		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, worksheetsFeedURL));
 		NodeSet entries = atom_helper_.getEntries();
@@ -62,7 +62,7 @@ namespace gstorage {
 	}
 
 	//Retrieves and returns the URI of the worksheets feed for the spreadsheet with title "documentTitle"
-	string SpreadsheetsService::getPrimaryWorksheetFeedURL(string documentTitle) {
+	string SpreadsheetsService::getPrimaryWorksheetFeedURL(string documentTitle) throw() {
 		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, spreadsheetsServiceURL));
 		NodeSet entries = atom_helper_.getEntries();
 
@@ -81,7 +81,7 @@ namespace gstorage {
 	}
 
 	//Inserts headers for a given worksheet
-	void SpreadsheetsService::insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& fieldNames) {
+	void SpreadsheetsService::insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& fieldNames) throw() {
 		string cellBaseUrl = getWorksheetCellsFeedURL(worksheetsFeedURL);
 		string postUrl = cellBaseUrl + "/batch";
 		xmlpp::Document document;
@@ -125,7 +125,7 @@ namespace gstorage {
 
 	/*Retrieves all rows from the given spreadsheet list feed URL and adds it to the passed tableData object*/
 	//TODO: Handle exceptions(like trying reading an unavailable field, etc., etc.)
-	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, TableData *tableData, bool isRowMetadataRequested) {
+	void SpreadsheetsService::getWorksheetListFeed(string listFeedURL, TableData *tableData, bool isRowMetadataRequested) throw() {
 		atom_helper_.parse(HttpRequest(HTTP_REQUEST_TYPE_GET, listFeedURL));
 
 		NodeSet entries = atom_helper_.getEntries();
@@ -143,7 +143,7 @@ namespace gstorage {
 	}
 
 	//Inserts a row at the end of a given worksheet
-	string SpreadsheetsService::insertRow(string listFeedUrl, TableData *tableData) {
+	string SpreadsheetsService::insertRow(string listFeedUrl, TableData *tableData) throw() {
 		cout << listFeedUrl;
 		xmlpp::Document document;
 		xmlpp::Element* nodeRoot = document.create_root_node("entry", "http://www.w3.org/2005/Atom", "");
@@ -168,7 +168,7 @@ namespace gstorage {
 	}
 
 	/*Retrieves rows with the data matching the provided tableData construct*/
-	void SpreadsheetsService::fetchFilteredSingleRow(string listFeedUrl, TableData *tableData) {
+	void SpreadsheetsService::fetchFilteredSingleRow(string listFeedUrl, TableData *tableData) throw() {
 		if(tableData->rows.size()<=0) {
 			tableData->rows.clear();
 		}
@@ -183,8 +183,9 @@ namespace gstorage {
 				if(!isFirst) listFeedUrl+="%20and%20";
 				else isFirst = false;
 				listFeedUrl+=*colName;
-				listFeedUrl+="=";
+				listFeedUrl+="=\"";
 				listFeedUrl+=stringUtils.find_and_replace(row[i], " ", "%20");
+				listFeedUrl+="\"";
 			}
 			i++;
 		}
@@ -192,7 +193,7 @@ namespace gstorage {
 		getWorksheetListFeed(listFeedUrl, tableData, true);
 	}
 
-	bool SpreadsheetsService::deleteRow(string rowURL) {
+	bool SpreadsheetsService::deleteRow(string rowURL) throw() {
 		cout << rowURL;
 		std::vector<string> custom_headers;
 		custom_headers.clear();
@@ -201,7 +202,7 @@ namespace gstorage {
 		return true;
 	}
 
-	bool SpreadsheetsService::updateRow(TableData *tableData) {
+	bool SpreadsheetsService::updateRow(TableData *tableData) throw() {
 		cout << "Inside updateRow" <<endl;
 		if(tableData->rows.size()>0 && tableData->rowIDs.size()>0 && tableData->rowEditURLs.size()>0) {
 			cout << "Inside updateRow if" <<endl;

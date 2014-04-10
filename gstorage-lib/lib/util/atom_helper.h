@@ -41,16 +41,16 @@ class AtomHelper {
 
   void parse(const string& xml_str) { parser_.parse_memory(xml_str); }
 
-  NodeSet Find(const Node *node, string xpath) const {
+  NodeSet Find(const Node *node, string xpath) const throw() {
     return node->find(xpath, namespaces_);
   }
 
-  const Node* getRootNode() const;
-  NodeSet getEntries() const;
+  const Node* getRootNode() const throw();
+  NodeSet getEntries() const throw();
 
-  string getSingleElementData(const Node *parent, string xpath) const;
-  string getAttribute(const Element *from_element, string attr_name) const;
-  const Element* getLinkByRel(const Node *entry, string rel) const;
+  string getSingleElementData(const Node *parent, string xpath) const throw();
+  string getAttribute(const Element *from_element, string attr_name) const throw();
+  const Element* getLinkByRel(const Node *entry, string rel) const throw();
 
  private:
   xmlpp::DomParser parser_;

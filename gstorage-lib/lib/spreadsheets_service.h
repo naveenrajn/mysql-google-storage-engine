@@ -23,16 +23,15 @@ public:
 	SpreadsheetsService();
 	~SpreadsheetsService() {};
 
-	string getWorksheetCellsFeedURL(string worksheetsFeedURL);
-	string getWorksheetListFeedURL(string worksheetsFeedURL);
-	string getPrimaryWorksheetFeedURL(string documentTitle);
-	void insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& values);
-	string insertRow(string listFeedUrl, TableData *tableData);
-	//string getWorksheetCellFeedURL(string documentTitle);
-	void getWorksheetListFeed(string listFeedURL, TableData *tableData, bool isRowMetadataRequested);
-	void fetchFilteredSingleRow(string listFeedUrl, TableData *tableData);
-	bool deleteRow(string rowURL);
-	bool updateRow(TableData *tableData);
+	string getWorksheetCellsFeedURL(string worksheetsFeedURL) throw();
+	string getWorksheetListFeedURL(string worksheetsFeedURL) throw();
+	string getPrimaryWorksheetFeedURL(string documentTitle) throw();
+	void insertTableHeaders(string worksheetsFeedURL, const std::vector<string>& values) throw();
+	string insertRow(string listFeedUrl, TableData *tableData) throw();
+	void getWorksheetListFeed(string listFeedURL, TableData *tableData, bool isRowMetadataRequested) throw();
+	void fetchFilteredSingleRow(string listFeedUrl, TableData *tableData) throw();
+	bool deleteRow(string rowURL) throw();
+	bool updateRow(TableData *tableData) throw();
 
 	//see if static can be removed and made private
 	static const string spreadsheetsServiceURL; // = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
